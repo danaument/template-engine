@@ -14,6 +14,75 @@ const render = require("./lib/htmlRenderer");
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
+const startQuestion = [
+    {
+        type:'list',
+        name:'addMore',
+        message: 'Would you like to add more team members?',
+        choices: ["Yes", "No"]
+    }
+]
+
+const additionalQuestions = [
+    {
+        type:'list',
+        name:'role',
+        message: 'What role would you like to add?',
+        choices: ['Engineer', 'Intern']
+    },
+    {
+        type:'list',
+        name:'addMore',
+        message: 'Would you like to add more team members?',
+        choices: ["Yes", "No"]
+    }
+
+]
+
+function init() {
+    inquirer
+        .prompt(startQuestion)
+        .then(answers => {
+            //set up manager obj
+
+            //recursive
+            if (answers.addMore === "Yes") {
+                addTeamMember();
+            }
+            
+        })
+        .catch(error => {
+            if(error.isTtyError) {
+                // Prompt couldn't be rendered in the current environment
+            } else {
+                // Something else when wrong
+            }
+        })
+}
+
+function addTeamMember() {
+    inquirer
+        .prompt(additionalQuestions)
+        .then(answers => {
+            //team member obj
+
+            //add to team
+
+            //recursive
+            if (answers.addMore === "Yes") {
+                addTeamMember();
+            }
+
+        })
+        .catch(error => {
+            if(error.isTtyError) {
+                // Prompt couldn't be rendered in the current environment
+            } else {
+                // Something else when wrong
+            }
+        })
+}
+
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
@@ -33,3 +102,9 @@ const render = require("./lib/htmlRenderer");
 // for further information. Be sure to test out each class and verify it generates an
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
+
+
+
+//function call to initialize program
+const teamArray = [];
+init();
