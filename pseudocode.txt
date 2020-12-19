@@ -1,0 +1,7 @@
+get all tests to run
+
+develop cli inquirer option tree 
+
+read up on path
+
+come up with a million validation/filter ideas
