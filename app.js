@@ -117,7 +117,7 @@ function addTeamMember(role) {
             })
     } else if (role === "Intern") {
         var questions = commonQuestions.concat(internQuestions, addMore)
-    } 
+     
         inquirer
             .prompt(questions)
             .then(answers => {
@@ -135,6 +135,7 @@ function addTeamMember(role) {
             .catch(error => {
                 console.log(error);
             })
+        }
 }
 
 // After the user has input all employees desired, call the `render` function (required
