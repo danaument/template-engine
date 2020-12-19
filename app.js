@@ -79,16 +79,16 @@ const addMore = [
 
 function init() {
     inquirer
-        .prompt(startQuestions)
+        .prompt(commonQuestions.concat(managerQuestions, addMore))
         .then(answers => {
             //set up manager obj
+            let newPerson = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
+            teamArray.push(newPerson);
             console.log(JSON.stringify(answers))
             //recursive
-            switch (role) {
-                case "Engineer":
-                    addTeamMember("Engineer") // probably take this out and make it if statements?  
+            if (answers.addMore !== "No") {
+                addTeamMember(answers.addMore)
             }
-            
         })
         .catch(error => {
             console.log(error)
@@ -96,22 +96,45 @@ function init() {
 }
 
 function addTeamMember(role) {
-    inquirer
-        .prompt(additionalQuestions)
-        .then(answers => {
-            //team member obj
-            console.log(JSON.stringify(answers))
-            //add to team
+    if (role === "Engineer") {
+        var questions = commonQuestions.concat(engineerQuestions, addMore)
+        inquirer
+            .prompt(questions)
+            .then(answers => {
+                //team member obj
+                let newPerson = new Engineer(answers.name, answers.id, answers.email, answers.github);
+                console.log(JSON.stringify(answers))
+                //add to team
+                teamArray.push(newPerson);
+                //recursive
+                if (answers.addMore === "Yes") {
+                    addTeamMember(role);
+                }
 
-            //recursive
-            if (answers.addMore === "Yes") {
-                addTeamMember(role);
-            }
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    } else if (role === "Intern") {
+        var questions = commonQuestions.concat(internQuestions, addMore)
+    } 
+        inquirer
+            .prompt(questions)
+            .then(answers => {
+                //team member obj
+                let newPerson = new Intern(answers.name, answers.id, answers.email, answers.school);
+                console.log(JSON.stringify(answers))
+                //add to team
+                teamArray.push(newPerson);
+                //recursive
+                if (answers.addMore === "Yes") {
+                    addTeamMember(role);
+                }
 
-        })
-        .catch(error => {
-            console.log(error);
-        })
+            })
+            .catch(error => {
+                console.log(error);
+            })
 }
 
 // After the user has input all employees desired, call the `render` function (required
