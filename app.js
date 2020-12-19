@@ -14,72 +14,103 @@ const render = require("./lib/htmlRenderer");
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
-const startQuestion = [
+const managerQuestions = [
     {
-        type:'list',
-        name:'addMore',
-        message: 'Would you like to add more team members?',
-        choices: ["Yes", "No"]
-    }
+        type:'input',
+        name:'officeNumber',
+        message:"What is the Manager's office number?"
+    },
+    
 ]
 
-const additionalQuestions = [
+const commonQuestions = [
     {
-        type:'list',
-        name:'role',
-        message: 'What role would you like to add?',
-        choices: ['Engineer', 'Intern']
+        type:'input',
+        name:'name',
+        message: "What is the employee's name?",
     },
     {
+        type:'input',
+        name:'id',
+        message: "What is the employee's ID?"
+    },
+    {
+        type: 'input',
+        name: 'email',
+        message: "What is the employee's email address?",
+        validate: function (email) {
+  
+            valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
+
+            if (valid) {
+                return true;
+            }
+            return "Please enter a valid email address.";
+            
+        }
+    }
+]
+
+const engineerQuestions = [
+    {
+        type:'input',
+        name:'github',
+        message:"What is the Engineer's GitHub username?",
+    }
+]
+
+const internQuestions = [
+    {
+        type:'input',
+        name:'school',
+        message:'Where did the Intern attend school?'
+    }
+]
+
+const addMore = [
+    {
         type:'list',
         name:'addMore',
-        message: 'Would you like to add more team members?',
-        choices: ["Yes", "No"]
-    }
-
+        message: 'Would you like to add addtional team members?',
+        choices: ['Engineer', 'Intern', 'No']
+    },
 ]
+
 
 function init() {
     inquirer
-        .prompt(startQuestion)
+        .prompt(startQuestions)
         .then(answers => {
             //set up manager obj
-
+            console.log(JSON.stringify(answers))
             //recursive
-            if (answers.addMore === "Yes") {
-                addTeamMember();
+            switch (role) {
+                case "Engineer":
+                    addTeamMember("Engineer") // probably take this out and make it if statements?  
             }
             
         })
         .catch(error => {
-            if(error.isTtyError) {
-                // Prompt couldn't be rendered in the current environment
-            } else {
-                // Something else when wrong
-            }
+            console.log(error)
         })
 }
 
-function addTeamMember() {
+function addTeamMember(role) {
     inquirer
         .prompt(additionalQuestions)
         .then(answers => {
             //team member obj
-
+            console.log(JSON.stringify(answers))
             //add to team
 
             //recursive
             if (answers.addMore === "Yes") {
-                addTeamMember();
+                addTeamMember(role);
             }
 
         })
         .catch(error => {
-            if(error.isTtyError) {
-                // Prompt couldn't be rendered in the current environment
-            } else {
-                // Something else when wrong
-            }
+            console.log(error);
         })
 }
 
