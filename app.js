@@ -4,6 +4,7 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+const numberTest = require("./lib/numberTest");
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
@@ -22,11 +23,20 @@ function outputTeam (team) {
     })
 }
 
+// function numberTest(num) {
+//     if (!isNaN(num) && num !== "") return true;
+// }
+
 const managerQuestions = [
     {
         type:'input',
         name:'officeNumber',
-        message:"What is the Manager's office number?"
+        message:"What is the Manager's office number?",
+        validate: function (num) {
+            if (numberTest(num)) {
+                return true;
+            } else return "Please enter a number.";
+        }
     },
     
 ]
@@ -36,11 +46,21 @@ const commonQuestions = [
         type:'input',
         name:'name',
         message: "What is the employee's name?",
+        validate: function (name) {
+            if (name === "") {
+                return "The name cannot be blank.";
+            } else return true;
+        }
     },
     {
         type:'input',
         name:'id',
-        message: "What is the employee's ID?"
+        message: "What is the employee's ID?",
+        validate: function (num) {
+            if (!isNaN(num)) {
+                return true;
+            } else return "Please enter a number.";
+        }
     },
     {
         type: 'input',
