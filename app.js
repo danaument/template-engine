@@ -89,6 +89,11 @@ function init() {
             if (answers.addMore !== "No") {
                 addTeamMember(answers.addMore)
             }
+            let html = render(teamArray);
+            fs.writeFile(outputPath, html, function (error) {
+                if (error) throw error;
+                console.log("file created");
+            })
         })
         .catch(error => {
             console.log(error)
