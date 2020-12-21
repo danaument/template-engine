@@ -5,12 +5,12 @@ const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 const numberTest = require("./lib/numberTest");
+const emailTest = require("./lib/emailTest");
 
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
-
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
@@ -23,10 +23,6 @@ function outputTeam (team) {
     })
 }
 
-// function numberTest(num) {
-//     if (!isNaN(num) && num !== "") return true;
-// }
-
 const managerQuestions = [
     {
         type:'input',
@@ -38,7 +34,6 @@ const managerQuestions = [
             } else return "Please enter a number.";
         }
     },
-    
 ]
 
 const commonQuestions = [
@@ -46,6 +41,9 @@ const commonQuestions = [
         type:'input',
         name:'name',
         message: "What is the employee's name?",
+        filter: function (name) {
+            return name.trim();
+        },
         validate: function (name) {
             if (name === "") {
                 return "The name cannot be blank.";
@@ -57,7 +55,7 @@ const commonQuestions = [
         name:'id',
         message: "What is the employee's ID?",
         validate: function (num) {
-            if (!isNaN(num)) {
+            if (numberTest(num)) {
                 return true;
             } else return "Please enter a number.";
         }
@@ -67,14 +65,10 @@ const commonQuestions = [
         name: 'email',
         message: "What is the employee's email address?",
         validate: function (email) {
-  
-            valid = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
-
-            if (valid) {
+            if (emailTest(email)) {
                 return true;
             }
             return "Please enter a valid email address.";
-            
         }
     }
 ]
@@ -84,6 +78,15 @@ const engineerQuestions = [
         type:'input',
         name:'github',
         message:"What is the Engineer's GitHub username?",
+        filter: function (name) {
+            return name.trim();
+        },
+        validate: function (github) {
+            if (github !== "") {
+                return true;
+            }
+            return "Please enter a GitHub username.";
+        }
     }
 ]
 
@@ -91,7 +94,16 @@ const internQuestions = [
     {
         type:'input',
         name:'school',
-        message:'Where did the Intern attend school?'
+        message:'Where did the Intern attend school?',
+        filter: function (name) {
+            return name.trim();
+        },
+        validate: function (school) {
+            if (school !== "") {
+                return true;
+            }
+            return "Please enter a school.";
+        }
     }
 ]
 
@@ -104,7 +116,6 @@ const addMore = [
     },
 ]
 
-
 function init() {
     inquirer
         .prompt(commonQuestions.concat(managerQuestions, addMore))
@@ -112,7 +123,7 @@ function init() {
             //set up manager obj
             let newPerson = new Manager(answers.name, answers.id, answers.email, answers.officeNumber);
             teamArray.push(newPerson);
-            console.log(JSON.stringify(answers))
+            // console.log(JSON.stringify(answers))
             //recursive
             if (answers.addMore !== "No") {
                 addTeamMember(answers.addMore)
@@ -121,7 +132,6 @@ function init() {
         .catch(error => {
             console.log(error)
         })
-    // outputTeam(teamArray);
 }
 
 function addTeamMember(role) {
@@ -132,7 +142,7 @@ function addTeamMember(role) {
             .then(answers => {
                 //team member obj
                 let newPerson = new Engineer(answers.name, answers.id, answers.email, answers.github);
-                console.log(JSON.stringify(answers))
+                // console.log(JSON.stringify(answers))
                 //add to team
                 teamArray.push(newPerson);
                 //recursive
@@ -152,14 +162,13 @@ function addTeamMember(role) {
             .then(answers => {
                 //team member obj
                 let newPerson = new Intern(answers.name, answers.id, answers.email, answers.school);
-                console.log(JSON.stringify(answers))
+                // console.log(JSON.stringify(answers))
                 //add to team
                 teamArray.push(newPerson);
                 //recursive
                 if (answers.addMore !== "No") {
                     addTeamMember(answers.addMore);
                 } else {outputTeam(teamArray)}
-
             })
             .catch(error => {
                 console.log(error);
@@ -190,10 +199,5 @@ function addTeamMember(role) {
 
 
 //function call to initialize program
-const teamArray = [];
+const teamArray = [];  //Dear grader, please tell me where I should initialize an array like this.  here? at the top? inside init()?  I know they all work, but which would be best practice?
 init();
-// let html = render(teamArray);
-// fs.writeFile(outputPath, html, function (error) {
-//     if (error) throw error;
-//     console.log("file created");
-// })
