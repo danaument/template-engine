@@ -14,6 +14,14 @@ const render = require("./lib/htmlRenderer");
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
+function outputTeam (team) { 
+    let html = render(team);
+    fs.writeFile(outputPath, html, function (error) {
+        if (error) throw error;
+        console.log("file created");
+    })
+}
+
 const managerQuestions = [
     {
         type:'input',
@@ -88,16 +96,12 @@ function init() {
             //recursive
             if (answers.addMore !== "No") {
                 addTeamMember(answers.addMore)
-            }
-            let html = render(teamArray);
-            fs.writeFile(outputPath, html, function (error) {
-                if (error) throw error;
-                console.log("file created");
-            })
+            } else {outputTeam(teamArray)}
         })
         .catch(error => {
             console.log(error)
         })
+    // outputTeam(teamArray);
 }
 
 function addTeamMember(role) {
@@ -114,7 +118,7 @@ function addTeamMember(role) {
                 //recursive
                 if (answers.addMore !== "No") {
                     addTeamMember(answers.addMore);
-                }
+                } else {outputTeam(teamArray)}
 
             })
             .catch(error => {
@@ -134,7 +138,7 @@ function addTeamMember(role) {
                 //recursive
                 if (answers.addMore !== "No") {
                     addTeamMember(answers.addMore);
-                }
+                } else {outputTeam(teamArray)}
 
             })
             .catch(error => {
@@ -168,8 +172,8 @@ function addTeamMember(role) {
 //function call to initialize program
 const teamArray = [];
 init();
-let html = render(teamArray);
-fs.writeFile(outputPath, html, function (error) {
-    if (error) throw error;
-    console.log("file created");
-})
+// let html = render(teamArray);
+// fs.writeFile(outputPath, html, function (error) {
+//     if (error) throw error;
+//     console.log("file created");
+// })
