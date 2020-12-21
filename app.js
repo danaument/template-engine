@@ -107,8 +107,8 @@ function addTeamMember(role) {
                 //add to team
                 teamArray.push(newPerson);
                 //recursive
-                if (answers.addMore === "Yes") {
-                    addTeamMember(role);
+                if (answers.addMore !== "No") {
+                    addTeamMember(answers.addMore);
                 }
 
             })
@@ -127,8 +127,8 @@ function addTeamMember(role) {
                 //add to team
                 teamArray.push(newPerson);
                 //recursive
-                if (answers.addMore === "Yes") {
-                    addTeamMember(role);
+                if (answers.addMore !== "No") {
+                    addTeamMember(answers.addMore);
                 }
 
             })
@@ -163,3 +163,8 @@ function addTeamMember(role) {
 //function call to initialize program
 const teamArray = [];
 init();
+let html = render(teamArray);
+fs.writeFile(outputPath, html, function (error) {
+    if (error) throw error;
+    console.log("file created");
+})
